@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+table, tr, td {
+    border: 1px solid black;
+    height: 50px;
+    width: 150px;
+}
+</style>
+</head>
+<body>
+
+<table>
+  <tr>
+	<td onclick="makeMark(0,0)" id="cell_0_0"></td>
+	<td onclick="makeMark(0,1)" id="cell_0_1"></td>
+	<td onclick="makeMark(0,2)" id="cell_0_2"></td>
+  </tr>
+	<td onclick="makeMark(1,0)" id="cell_1_0"></td>
+	<td onclick="makeMark(1,1)" id="cell_1_1"></td>
+	<td onclick="makeMark(1,2)" id="cell_1_2"></td>
+  </tr>
+  <tr>
+	<td onclick="makeMark(2,0)" id="cell_2_0"></td>
+	<td onclick="makeMark(2,1)" id="cell_2_1"></td>
+	<td onclick="makeMark(2,2)" id="cell_2_2"></td>
+  </tr>
+</table>
+<p id="game_state">No Current Winner Yet!</p>
+
+<input type=button onClick="Javascript: reset();" value="Reset">
+
+<script>
+var currentPlayer=1;
+var grid = new Array(3);
+grid[0] = new Array(3);
+grid[1] = new Array(3);
+grid[2] = new Array(3);
+
+for (var i=0; i<=2; i++) {
+  for (var j=0; j<=2; j++) {
+    grid[i][j]=0;
+  }
+}
+
+
+function makeMark(x, y) {
+	if (grid[x][y] > 0){
+    	alert("This cell is not empty, please try another one!");
+    }
+    else {
+      if (currentPlayer==1){
+          document.getElementById("cell_" + x + "_" + y).innerHTML = "X";
+          grid[x][y]=1;
+          currentPlayer=2;
+          detectWinner();
+      }
+      else{
+          document.getElementById("cell_" + x + "_" + y).innerHTML = "O";
+          grid[x][y]=2;
+          currentPlayer=1;
+          detectWinner();
+      }
+    }
+}
+
+//There's a way to do this in constant time apparently. Will figure this out later
+function detectWinner() {
+    //Detects winner diagonally and anti-diagonally
+    if (grid[0][0] == grid[1][1] && grid[1][1] == grid[2][2] && grid[0][0]!=0){
+    	document.getElementById("cell_" + 0 + "_" + 0).style.color="red";
+        document.getElementById("cell_" + 1 + "_" + 1).style.color="red";
+        document.getElementById("cell_" + 2 + "_" + 2).style.color="red";
+    	document.getElementById("cell_" + 0 + "_" + 0).style.fontSize="xx-large";
+        document.getElementById("cell_" + 1 + "_" + 1).style.fontSize="xx-large";
+        document.getElementById("cell_" + 2 + "_" + 2).style.fontSize="xx-large";
+    	document.getElementById("game_state").innerHTML = "Somebody won diagonally!";
+    }
+    if (grid[0][2] == grid[1][1] && grid[1][1] == grid[2][0] && grid[0][2]!=0){
+    	document.getElementById("cell_" + 0 + "_" + 2).style.color="red";
+        document.getElementById("cell_" + 1 + "_" + 1).style.color="red";
+        document.getElementById("cell_" + 2 + "_" + 0).style.color="red";
+        document.getElementById("cell_" + 0 + "_" + 2).style.fontSize="xx-large";
+      	document.getElementById("cell_" + 1 + "_" + 1).style.fontSize="xx-large";
+        document.getElementById("cell_" + 2 + "_" + 0).style.fontSize="xx-large";
+    	document.getElementById("game_state").innerHTML = "Somebody won anti-diagonally!";
+    }
+
+
+	//Way too many for-loops. Must be something simpler. THERE MUST BE
+
+	//Detects winner column-wise
+	for (i = 0; i <=2; i++){
+        if(grid[0][i]==0)
+        	continue;
+    	if(grid[0][i] == grid[1][i] && grid[1][i] == grid[2][i]){
+           	document.getElementById("cell_" + 0 + "_" + i).style.color="red";
+        	document.getElementById("cell_" + 1 + "_" + i).style.color="red";
+        	document.getElementById("cell_" + 2 + "_" + i).style.color="red";
+            document.getElementById("cell_" + 0 + "_" + i).style.fontSize="xx-large";
+        	document.getElementById("cell_" + 1 + "_" + i).style.fontSize="xx-large";
+        	document.getElementById("cell_" + 2 + "_" + i).style.fontSize="xx-large";
+        	document.getElementById("game_state").innerHTML = "Somebody won vertically!";
+         }
+	}
+    //Detects winner row-wise
+    for (i = 0 ; i <=2; i++){
+    	if(grid[i][0] == 0)
+        	continue;
+        if(grid[i][0] == grid[i][1] && grid[i][1] == grid[i][2]){
+           	document.getElementById("game_state").innerHTML = "Somebody won horizontally!";
+           	document.getElementById("cell_" + i + "_" + 0).style.color="red";
+        	document.getElementById("cell_" + i + "_" + 1).style.color="red";
+        	document.getElementById("cell_" + i + "_" + 2).style.color="red";
+            document.getElementById("cell_" + i + "_" + 0).style.fontSize="xx-large";
+        	document.getElementById("cell_" + i + "_" + 1).style.fontSize="xx-large";
+        	document.getElementById("cell_" + i + "_" + 2).style.fontSize="xx-large";
+        }
+    }
+}
+
+function reset() {
+for (var i=0; i<=2; i++) {
+  for (var j=0; j<=2; j++) {
+    grid[i][j]=0;
+    document.getElementById("cell_"+i+"_"+j).innerHTML="&nbsp;";
+  }
+}
+ currentPlayer=1;
+}
+
+</script>
+
+</body>
+</html>
